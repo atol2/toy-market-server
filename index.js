@@ -117,20 +117,20 @@ async function run() {
     app.put('/bookings/:id', async (req, res) => {
         const id = req.params.id;
         const option = { upsert: true }
-        const filter = { _id: new ObjectId(id) }
+        const ObjectId = require('mongodb').ObjectId;
         const updatedToy = req.body;
         const toy = {
             $set: {
                 name: updatedToy.name,
-                category: updatedToy.category,
-                toyName: updatedToy.toyName,
-                photo: updatedToy.photo,
+                subCategory: updatedToy.subCategory,
+                sellerName: updatedToy.sellerName,
+                imageUrl: updatedToy.imageUrl,
                 price: updatedToy.price,
                 quantity: updatedToy.quantity
             }
 
         }
-        const result = await bookingCollection.updateOne(filter, toy, option);
+        const result = await bookingCollection.updateOne({_id: new ObjectId(id)}, toy, option);
         res.send(result)
        })
     // Send a ping to confirm a successful connection
