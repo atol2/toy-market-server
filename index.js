@@ -54,8 +54,9 @@ async function run() {
     })
 
     app.get('/toys/:text', async (req, res) => {
-        if (req.params.text == 'Electric Toy Cars' || req.params.text == 'Racing Cars' || req.params.text == 'Jeep Cars') {
-            const result = await toyCollection.find({ category: req.params.text }).toArray();
+        console.log(req.params.text);
+        if (req.params.text == 'Electric' || req.params.text == 'Racing' || req.params.text == 'Jeep') {
+            const result = await toyCollection.find({ subCategory: req.params.text }).toArray();
             return res.send(result)
         }
         const result = await toyCollection.find({}).toArray();
@@ -65,8 +66,9 @@ async function run() {
 
     app.get('/getToys/:id', async (req, res) => {
         const id = req.params.id
-        const query = { _id: new ObjectId(id) }
-        const result = await toyCollection.findOne(query);
+        const ObjectId = require('mongodb').ObjectId;
+        // const query = { _id: new ObjectId(id) }
+        const result = await toyCollection.findOne({_id: new ObjectId(id)});
         res.send(result)
     })
 
@@ -93,9 +95,10 @@ async function run() {
 
     app.get('/bookings/:id', async (req, res) => {
         const id = req.params.id
-        console.log(id);
-        const query = { _id: new ObjectId(id) }
-        const result = await bookingCollection.findOne(query);
+        
+        const ObjectId = require('mongodb').ObjectId;
+        // const query = { _id: new ObjectId(id) }
+    const result = await bookingCollection.findOne({_id: new ObjectId(id)});
         res.send(result)
     })
 
@@ -104,8 +107,10 @@ async function run() {
 
     app.delete('/bookings/:id', async (req, res) => {
         const id = req.params.id;
-        const query = { _id: new ObjectId(id) }
-        const result = await bookingCollection.deleteOne(query);
+        console.log(id)
+        const ObjectId = require('mongodb').ObjectId;
+        // const query = { _id: new ObjectId(id) }
+        const result = await bookingCollection.deleteOne({_id: new ObjectId(id)});
         res.send(result)
     })
 
