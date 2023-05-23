@@ -24,7 +24,7 @@ async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
 
-    await client.connect();
+    // await client.connect();
 
 
 
@@ -64,6 +64,18 @@ async function run() {
 
     })
 
+    app.get('/getToys', async (req, res) => {
+        let query = {}
+        if (req.query?.email) {
+            query = { email: req.query.email }
+        }
+        const toys = toyCollection.find(query)
+        const result = await toys.toArray()
+        res.send(result)
+    })
+
+    
+
     app.get('/getToys/:id', async (req, res) => {
         const id = req.params.id
         const ObjectId = require('mongodb').ObjectId;
@@ -71,6 +83,35 @@ async function run() {
         const result = await toyCollection.findOne({_id: new ObjectId(id)});
         res.send(result)
     })
+
+    app.delete('/toys/:id', async (req, res) => {
+        const id = req.params.id;
+        console.log(id)
+        const ObjectId = require('mongodb').ObjectId;
+        // const query = { _id: new ObjectId(id) }
+        const result = await toyCollection.deleteOne({_id: new ObjectId(id)});
+        res.send(result)
+    })
+
+    app.put('/toys/:id', async (req, res) => {
+        const id = req.params.id;
+        const option = { upsert: true }
+        const ObjectId = require('mongodb').ObjectId;
+        const updatedToy = req.body;
+        const toy = {
+            $set: {
+                name: updatedToy.name,
+                subCategory: updatedToy.subCategory,
+                sellerName: updatedToy.sellerName,
+                imageUrl: updatedToy.imageUrl,
+                price: updatedToy.price,
+                quantity: updatedToy.quantity
+            }
+
+        }
+        const result = await toyCollection.updateOne({_id: new ObjectId(id)}, toy, option);
+        res.send(result)
+       })
 
     //=====find my toy======
 
@@ -99,6 +140,7 @@ async function run() {
         const ObjectId = require('mongodb').ObjectId;
         // const query = { _id: new ObjectId(id) }
     const result = await bookingCollection.findOne({_id: new ObjectId(id)});
+    console.log(result);
         res.send(result)
     })
 
